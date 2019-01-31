@@ -1,0 +1,10 @@
+[0m[[0m[31merror[0m] [0m[0m/home/arastorn/Cours/Reactive_Programming/reactAkka/akkahttp/src/main/scala/products/services/microService.scala:22:5: illegal start of declaration (possible cause: missing `=' in front of current method body)[0m
+[0m[[0m[31merror[0m] [0m[0m    pathEndOrSingleSlash{[0m
+[0m[[0m[31merror[0m] [0m[0m    ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/arastorn/Cours/Reactive_Programming/reactAkka/akkahttp/src/main/scala/products/services/microService.scala:30:5: illegal start of declaration (possible cause: missing `=' in front of current method body)[0m
+[0m[[0m[31merror[0m] [0m[0m    path("changePrice") { // /product/:id/changePrice[0m
+[0m[[0m[31merror[0m] [0m[0m    ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/arastorn/Cours/Reactive_Programming/reactAkka/akkahttp/src/main/scala/products/services/microService.scala:35:5: illegal start of declaration (possible cause: missing `=' in front of current method body)[0m
+[0m[[0m[31merror[0m] [0m[0m    path("changeName") { // /product/:id/changeName[0m
+[0m[[0m[31merror[0m] [0m[0m    ^[0m
+[0m[[0m[31merror[0m] [0m[0mthree errors found[0m
