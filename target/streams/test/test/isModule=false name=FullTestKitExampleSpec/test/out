@@ -1,0 +1,6 @@
+[0m[[0m[0minfo[0m] [0m[0m[32mFullTestKitExampleSpec:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mThe service[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should return a greeting for GET requests to the root path[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should return a 'PONG!' response for GET requests to /ping[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should leave GET requests to other paths unhandled[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should return a MethodNotAllowed error for PUT requests to the root path[0m[0m
