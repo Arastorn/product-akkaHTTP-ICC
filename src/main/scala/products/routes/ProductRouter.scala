@@ -15,67 +15,80 @@ import scala.io.StdIn
 
 object ProductRouter {
 
-
-  def product(id : Int) : Route = {
-    pathEndOrSingleSlash{
-      get {
-        complete(s"Un produit spécifique $id")
-      } ~
-      delete {
-        complete(s"le produit numéro $id a été supprimé")
-      }
-    } ~
+  def putInProductIdChangePrice(id : Int) : Route = {
     path("changePrice") { // /product/:id/changePrice
       put {
-        complete("Changement du prix du produit")
-      }
-    } ~
-    path("changeName") { // /product/:id/changeName
-      put {
-        complete("Changement du Label du produit")
+        complete(s"Changement du prix du produit $id")
       }
     }
   }
 
-  // TO DO : Factorization
-  def route: Route =
+
+  def putInProductIdChangeLabel(id : Int) : Route = {
+    path("changeName") { // /product/:id/changeName
+      put {
+        complete(s"Changement du Label du produit $id")
+      }
+    }
+  }
+
+  def putInProductId(id : Int) : Route = {
+    putInProductIdChangePrice(id) ~
+    putInProductIdChangeLabel(id)
+  }
+
+  def getByProductId(id: Int) : Route = {
+    get {
+      complete(s"Un produit spécifique $id")
+    }
+  }
+
+  def deleteByProductId(id: Int) : Route = {
+    delete {
+      complete(s"le produit $id a été supprimer")
+    }
+  }
+
+  def productId(id : Int) : Route = {
+    pathEndOrSingleSlash{ // /product/:id/
+      getByProductId(id) ~
+      deleteByProductId(id)
+    } ~
+    putInProductId(id)
+  }
+
+
+  def getProducts: Route =
+    get {
+      complete("La liste de produit")
+    }
+
+  def postProduct: Route =
+    post {
+      complete("Le produit a été créer")
+    }
+
+  def product: Route =
     pathPrefix("product") { // the products
       pathEndOrSingleSlash { // /product or /product/
-        get {
-          complete("La liste de produit")
-        } ~
-        post {
-          complete("Le produit a été créer")
-        }
+        getProducts ~
+        postProduct
       } ~
-      pathPrefix(IntNumber) { id => // /product/:id our /product/:id/
-        pathEndOrSingleSlash {
-          get {
-            complete(s"Un produit spécifique $id")
-          } ~
-          delete {
-            complete(s"le produit $id a été supprimer")
-          }
-        } ~
-        path("changePrice") { // /product/:id/changePrice
-          put {
-            complete(s"Changement du prix du produit $id")
-          }
-        } ~
-        path("changeName") { // /product/:id/changeName
-          put {
-            complete(s"Changement du Label du produit $id")
-          }
-        }
-      }
-    } ~
-    pathEndOrSingleSlash {
-        complete(
-          HttpEntity(
-            ContentTypes.`text/plain(UTF-8)`,
-            "<html><body>Hello ! Welcome on the product API</body></html>"
-          )
-        )
+      pathPrefix(IntNumber) {id => productId(id)}
     }
+
+  def welcomeOnApiPath: Route =
+    pathEndOrSingleSlash {
+      complete(
+        HttpEntity(
+          ContentTypes.`text/plain(UTF-8)`,
+          "<html><body>Hello ! Welcome on the product API</body></html>"
+        )
+      )
+    }
+
+  def route: Route =
+    product ~
+    welcomeOnApiPath
 
 }
