@@ -15,8 +15,8 @@ import scala.io.StdIn
 
 object ProductRouter {
 
-/*
-  def product(id : Int) : Route {
+
+  def product(id : Int) : Route = {
     pathEndOrSingleSlash{
       get {
         complete(s"Un produit spécifique $id")
@@ -36,7 +36,7 @@ object ProductRouter {
       }
     }
   }
-*/
+
   // TO DO : Factorization
   def route: Route =
     pathPrefix("product") { // the products
