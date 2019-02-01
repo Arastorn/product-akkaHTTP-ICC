@@ -1,8 +1,0 @@
-[0m[[0m[0minfo[0m] [0m[0m[32mProductRouterTest:[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32mA Product Router[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- should list all products[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- should create a product[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- should Get product with id = 1 in the list[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- should Delete product with id = 1 in the list[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- should Change the label of product with id = 1 in the list[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- should Change the Price of product with id = 1 in the list[0m[0m
