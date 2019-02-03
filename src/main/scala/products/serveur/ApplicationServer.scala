@@ -21,6 +21,7 @@ object ApplicationServer {
     implicit val system = ActorSystem()
     implicit val materializer = ActorMaterializer()
     implicit val executionContext = system.dispatcher
+    
 
     val bindingFuture = Http().bindAndHandle(ProductRouter.route, host, port)
     println(s"Server online at http://localhost:9000/")
