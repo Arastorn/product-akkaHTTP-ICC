@@ -1,24 +1,17 @@
 package products.routes
 
-import akka.actor.ActorSystem
-import akka.stream.scaladsl._
-import akka.util.ByteString
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpEntity, ContentTypes}
 import akka.http.scaladsl.server.Directives._
-import akka.stream.ActorMaterializer
-
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import scala.util.Random
-import scala.io.StdIn
 
 object ProductRouter {
 
   def putInProductIdChangePrice(id : Int) : Route = {
     path("changePrice") { // /product/:id/changePrice
       put {
-        complete(s"Changement du prix du produit $id")
+        complete(StatusCodes.OK, "Changement du prix du produit $id")
       }
     }
   }
@@ -27,7 +20,7 @@ object ProductRouter {
   def putInProductIdChangeLabel(id : Int) : Route = {
     path("changeName") { // /product/:id/changeName
       put {
-        complete(s"Changement du Label du produit $id")
+        complete(StatusCodes.OK, s"Changement du Label du produit $id")
       }
     }
   }
@@ -39,13 +32,13 @@ object ProductRouter {
 
   def getByProductId(id: Int) : Route = {
     get {
-      complete(s"Un produit spécifique $id")
+      complete(StatusCodes.OK, s"Un produit spécifique $id")
     }
   }
 
   def deleteByProductId(id: Int) : Route = {
     delete {
-      complete(s"le produit $id a été supprimer")
+      complete(StatusCodes.OK, s"le produit $id a été supprimer")
     }
   }
 
@@ -60,12 +53,12 @@ object ProductRouter {
 
   def getProducts: Route =
     get {
-      complete("La liste de produit")
+      complete(StatusCodes.OK, "La liste de produit")
     }
 
   def postProduct: Route =
     post {
-      complete("Le produit a été créer")
+      complete(StatusCodes.OK, "Le produit a été créer")
     }
 
   def product: Route =
