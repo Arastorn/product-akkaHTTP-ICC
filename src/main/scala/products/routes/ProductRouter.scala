@@ -1,6 +1,7 @@
 package products.routes
 
 import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpEntity, ContentTypes}
 import akka.http.scaladsl.server.Directives._
@@ -11,7 +12,7 @@ object ProductRouter {
   def putInProductIdChangePrice(id : Int) : Route = {
     path("changePrice") { // /product/:id/changePrice
       put {
-        complete(StatusCodes.OK, "Changement du prix du produit $id")
+        complete(StatusCodes.OK, s"Changement du prix du produit $id")
       }
     }
   }
