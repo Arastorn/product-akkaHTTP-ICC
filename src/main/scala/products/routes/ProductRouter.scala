@@ -3,37 +3,56 @@ package products.routes
 import akka.pattern.ask
 import akka.util.Timeout
 import scala.concurrent.duration._
-import akka.actor.{Props, ActorLogging, Actor, ActorRef}
+import akka.actor.{Props, ActorLogging, Actor, ActorRef, ActorSystem}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpEntity, ContentTypes}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import spray.json._
 
 import products.actors.ProductRequestHandler
 import products.messages.ProductMessages._
+import products.models._
 
-object ProductRouter {
 
-  implicit val system = context.system
-  implicit val timeout: Timeout = 20.seconds
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
-  val productRequestHandler = system.actorOf(ProductRequestHandler.props(), "productRequestHandler")
+trait ProductRouter {
+
+  implicit val system: ActorSystem
+
+  implicit val timeout: Timeout = 5.seconds
+
+  def productRequestHandler: ActorRef
 
   def putInProductIdChangePrice(id : Int) : Route = {
     path("changePrice") { // /product/:id/changePrice
       put {
-        complete(StatusCodes.OK, s"Changement du prix du produit $id")
+        entity(as[JsValue]) { productReport =>
+          onSuccess(productRequestHandler ? ChangeProductPriceRequest(productReport,id)) {
+            case response: ProductResponse =>
+              complete(StatusCodes.OK, response.product)
+            case _ =>
+              complete(StatusCodes.InternalServerError)
+          }
+        }
       }
     }
   }
 
-
   def putInProductIdChangeLabel(id : Int) : Route = {
     path("changeName") { // /product/:id/changeName
       put {
-        complete(StatusCodes.OK, s"Changement du Label du produit $id")
+        entity(as[JsValue]) { productReport =>
+          onSuccess(productRequestHandler ? ChangeProductLabelRequest(productReport,id)) {
+            case response: ProductResponse =>
+              complete(StatusCodes.OK, response.product)
+            case _ =>
+              complete(StatusCodes.InternalServerError)
+          }
+        }
       }
     }
   }
@@ -43,22 +62,34 @@ object ProductRouter {
     putInProductIdChangeLabel(id)
   }
 
-  def getByProductId(id: Int) : Route = {
+  def getProductById(id: Int) : Route = {
     get {
-      complete(StatusCodes.OK, s"Un produit spécifique $id")
+      onSuccess(productRequestHandler ? GetProductById(id))
+      {
+        case response: ProductResponse =>
+          complete(StatusCodes.OK, response.product)
+        case _ =>
+          complete(StatusCodes.InternalServerError)
+      }
     }
   }
 
-  def deleteByProductId(id: Int) : Route = {
+  def deleteProductById(id: Int) : Route = {
     delete {
-      complete(StatusCodes.OK, s"le produit $id a été supprimer")
+      onSuccess(productRequestHandler ? DeleteProductById(id))
+      {
+        case response: ProductsResponse =>
+          complete(StatusCodes.OK, response.products)
+        case _ =>
+          complete(StatusCodes.InternalServerError)
+      }
     }
   }
 
   def productId(id : Int) : Route = {
     pathEndOrSingleSlash{ // /product/:id/
-      getByProductId(id) ~
-      deleteByProductId(id)
+      getProductById(id) ~
+      deleteProductById(id)
     } ~
     putInProductId(id)
   }
@@ -67,8 +98,8 @@ object ProductRouter {
   def getProducts: Route =
     get {
       onSuccess(productRequestHandler ? GetProductsRequest) {
-        case response: ProductResponse =>
-          complete(StatusCodes.OK, "La liste de produit")
+        case response: ProductsResponse =>
+          complete(StatusCodes.OK, response.products)
         case _ =>
           complete(StatusCodes.InternalServerError)
       }
@@ -76,7 +107,14 @@ object ProductRouter {
 
   def postProduct: Route =
     post {
-      complete(StatusCodes.OK, "Le produit a été créer")
+      entity(as[JsValue]) { productReport =>
+        onSuccess(productRequestHandler ? AddProductRequest(productReport)) {
+          case response: ProductsResponse =>
+            complete(StatusCodes.OK, response.products)
+          case _ =>
+            complete(StatusCodes.InternalServerError)
+        }
+      }
     }
 
   def product: Route =
@@ -98,7 +136,7 @@ object ProductRouter {
       )
     }
 
-  def route: Route =
+  def route: Route  =
     product ~
     welcomeOnApiPath
 

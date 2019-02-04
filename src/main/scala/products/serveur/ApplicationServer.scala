@@ -10,20 +10,21 @@ import akka.stream.ActorMaterializer
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
 import products.routes.ProductRouter
+import products.actors.ProductRequestHandler
 
 
-object ApplicationServer {
+object ApplicationServer extends App with ProductRouter {
 
   val host="localhost"
   val port = 9000
 
-  def main(args: Array[String]) : Unit = {
-    implicit val system = ActorSystem()
-    implicit val materializer = ActorMaterializer()
-    implicit val executionContext = system.dispatcher
-    
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
+  implicit val executionContext = system.dispatcher
 
-    val bindingFuture = Http().bindAndHandle(ProductRouter.route, host, port)
-    println(s"Server online at http://localhost:9000/")
-  }
+  val productRequestHandler = system.actorOf(ProductRequestHandler.props(), "productRequestHandler")
+
+  val bindingFuture = Http().bindAndHandle(route, host, port)
+  println(s"Server online at http://localhost:9000/")
+
 }
