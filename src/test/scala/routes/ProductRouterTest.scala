@@ -43,7 +43,7 @@ class ProductRouterTest extends WordSpec with Matchers with ScalatestRouteTest w
       }
     }
 
-    "create a product Product(2,Voiture,5000)" in {
+    "create a product Product(Voiture,5000)" in {
       Post("/product", ("""{"label": "Voiture","price":5000}""").parseJson) ~> route ~> check {
         var products: Seq[Product] = Nil :+ Product(1,"stylo",5) :+ Product(2,"Voiture",5000)
         status shouldBe StatusCodes.OK
