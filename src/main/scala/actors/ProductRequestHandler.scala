@@ -1,11 +1,11 @@
-package products.actors
+package actors
 
 import akka.actor.{Actor, ActorLogging, Props}
 import spray.json._
 import spray.json.DefaultJsonProtocol._
 
-import products.models._
-import products.messages.ProductMessages._
+import models._
+import messages.ProductMessages._
 
 class ProductRequestHandler extends Actor with ActorLogging{
 
@@ -73,7 +73,7 @@ class ProductRequestHandler extends Actor with ActorLogging{
       case Seq(JsNumber(price)) =>
         price.toInt
       case _ =>
-      throw new DeserializationException("price Int expected")
+      throw new DeserializationException("price: Int expected")
     }
 
   private def parseLabelJson(json: JsValue): String =
@@ -81,7 +81,7 @@ class ProductRequestHandler extends Actor with ActorLogging{
       case Seq(JsString(label)) =>
         label
       case _ =>
-      throw new DeserializationException("Label string expected")
+      throw new DeserializationException("label: String expected")
     }
 
   private def parseJson(json: JsValue): (String, Int) =
@@ -89,7 +89,7 @@ class ProductRequestHandler extends Actor with ActorLogging{
       case Seq(JsString(label),JsNumber(price)) =>
         (label, price.toInt)
       case _ =>
-      throw new DeserializationException("label string and price int expected")
+      throw new DeserializationException("label: String and price: Int expected")
     }
 
   override def receive: Receive = {

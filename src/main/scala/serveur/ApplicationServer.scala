@@ -1,4 +1,4 @@
-package products.services
+package services
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl._
@@ -9,8 +9,8 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
-import products.routes.ProductRouter
-import products.actors.ProductRequestHandler
+import routes.ProductRouter
+import actors.ProductRequestHandler
 
 
 object ApplicationServer extends App with ProductRouter {

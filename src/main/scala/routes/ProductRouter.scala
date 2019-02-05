@@ -1,4 +1,4 @@
-package products.routes
+package routes
 
 import akka.pattern.ask
 import akka.util.Timeout
@@ -12,9 +12,9 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import spray.json._
 
-import products.actors.ProductRequestHandler
-import products.messages.ProductMessages._
-import products.models._
+import actors.ProductRequestHandler
+import messages.ProductMessages._
+import models._
 
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
@@ -43,7 +43,7 @@ trait ProductRouter {
   }
 
   def putInProductIdChangeLabel(id : Int) : Route = {
-    path("changeName") { // /product/:id/changeName
+    path("changeLabel") { // /product/:id/changeName
       put {
         entity(as[JsValue]) { productReport =>
           onSuccess(productRequestHandler ? ChangeProductLabelRequest(productReport,id)) {
